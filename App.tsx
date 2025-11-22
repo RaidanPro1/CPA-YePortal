@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { HashRouter, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -7,15 +8,16 @@ import {
   CheckCircle, AlertTriangle, MapPin, Send, Loader2, TrendingUp, 
   Heart, Map as MapIcon, Settings, User, LogOut, Plus, Edit, Trash,
   Shield, PlayCircle, LayoutDashboard, Package, Briefcase, Lock, Newspaper, Video,
-  Facebook, Twitter, Instagram, Mail, Phone, FileText
+  Facebook, Twitter, Instagram, Mail, Phone, FileText, ArrowUpRight, ArrowDownRight, Minus
 } from 'lucide-react';
 
 import { 
   SLIDES, SERVICES_DATA, DASHBOARD_STATS, 
-  NEWS_DATA, INITIAL_PRODUCTS, TEXTS, INITIAL_PROFILE, INITIAL_JOBS, INITIAL_MEDIA, MOCK_CRM_STATS, INITIAL_USERS 
+  NEWS_DATA, INITIAL_PRODUCTS, TEXTS, INITIAL_PROFILE, INITIAL_JOBS, INITIAL_MEDIA, MOCK_CRM_STATS, INITIAL_USERS,
+  PARTNERS_DATA, CURRENCY_RATES
 } from './constants';
 import { 
-  Language, Product, JobOpportunity, MediaItem, OrganizationProfile, ViolationReport, User as UserType, NewsItem 
+  Language, Product, JobOpportunity, MediaItem, OrganizationProfile, ViolationReport, User as UserType, NewsItem, Partner 
 } from './types';
 import { analyzeViolationReport } from './services/geminiService';
 
@@ -256,15 +258,45 @@ const Navbar: React.FC = () => {
 const NewsTicker: React.FC = () => {
   const { t, dir } = useLanguage();
   return (
-    <div className="bg-primary text-white py-2 overflow-hidden relative z-40 border-b border-secondary">
-      <div className="flex whitespace-nowrap">
+    <div className="bg-primary text-white py-2 overflow-hidden relative z-40 border-b border-secondary flex items-center">
+      <div className="flex-shrink-0 bg-accent px-4 py-2 font-bold text-sm z-50 shadow-md">
+        {t('news')}
+      </div>
+      <div className="flex-1 overflow-hidden relative h-full">
         <motion.div
-          className="inline-block"
-          animate={{ x: dir === 'rtl' ? ['-100%', '100%'] : ['100%', '-100%'] }}
+          className="absolute top-0 whitespace-nowrap flex items-center h-full"
+          animate={{ x: dir === 'rtl' ? ['100%', '-100%'] : ['-100%', '100%'] }}
           transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
         >
           <span className="text-sm font-bold px-4">{t('tickerText')}</span>
         </motion.div>
+      </div>
+    </div>
+  );
+};
+
+const CurrencyWidget: React.FC = () => {
+  const { t } = useLanguage();
+  return (
+    <div className="bg-dark text-white py-3 border-b border-gray-800 overflow-x-auto">
+      <div className="container mx-auto px-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2 text-accent font-bold whitespace-nowrap">
+          <TrendingUp size={18} />
+          <span>{t('currency_title')}</span>
+        </div>
+        <div className="flex gap-6 text-sm font-mono">
+          {CURRENCY_RATES.map(rate => (
+            <div key={rate.currency} className="flex items-center gap-2">
+              <span className="font-bold text-gray-400">{rate.currency}</span>
+              <span className="flex items-center gap-1 text-white">
+                {rate.indicator === 'up' ? <ArrowUpRight size={14} className="text-red-500"/> : 
+                 rate.indicator === 'down' ? <ArrowDownRight size={14} className="text-green-500"/> : 
+                 <Minus size={14} className="text-gray-500"/>}
+                Buy: {rate.buy} / Sell: {rate.sell}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -314,6 +346,28 @@ const HeroSlider: React.FC = () => {
         ))}
       </div>
     </div>
+  );
+};
+
+const PartnersSection: React.FC = () => {
+  const { t, language } = useLanguage();
+  return (
+    <section className="py-12 bg-gray-50 border-t">
+      <div className="container mx-auto px-4">
+        <h3 className="text-2xl font-bold text-center text-gray-600 mb-8">{t('partners_title')}</h3>
+        <div className="flex flex-wrap justify-center items-center gap-12 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+          {PARTNERS_DATA.map(partner => (
+            <div key={partner.id} className="flex flex-col items-center gap-2">
+               <div className="w-24 h-24 rounded-full bg-white shadow flex items-center justify-center p-4">
+                  <span className="font-bold text-xl text-primary">{language === 'ar' ? partner.nameAr[0] : partner.nameEn[0]}</span>
+                  {/* <img src={partner.logo} alt={partner.nameEn} className="max-w-full max-h-full" /> */}
+               </div>
+               <span className="text-sm font-bold text-gray-500">{language === 'ar' ? partner.nameAr : partner.nameEn}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
 
@@ -875,12 +929,13 @@ const HomePage: React.FC<{ news: NewsItem[] }> = ({ news }) => {
   const { t, language } = useLanguage();
   return (
     <>
+      <CurrencyWidget />
       <HeroSlider />
       <NewsTicker />
       <div className="py-12 bg-primary text-white text-center">
          <h2 className="text-3xl font-bold mb-4"><TrendingUp className="inline mr-2"/> {t('transparency_title')}</h2>
-         <div className="flex justify-center gap-8">
-            {DASHBOARD_STATS.map((s, i) => <div key={i} className="bg-white/10 p-4 rounded">
+         <div className="flex justify-center gap-8 flex-wrap">
+            {DASHBOARD_STATS.map((s, i) => <div key={i} className="bg-white/10 p-4 rounded min-w-[150px]">
                <div className="text-2xl font-bold">{s.value}</div>
                <div className="text-sm opacity-75">{t(s.labelKey)}</div>
             </div>)}
@@ -908,6 +963,7 @@ const HomePage: React.FC<{ news: NewsItem[] }> = ({ news }) => {
         </div>
       </section>
       <Services />
+      <PartnersSection />
     </>
   );
 };

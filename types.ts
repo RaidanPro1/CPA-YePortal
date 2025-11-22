@@ -1,3 +1,4 @@
+
 export type Language = 'ar' | 'en';
 
 export interface User {
@@ -123,6 +124,20 @@ export interface ViolationReport {
   status: 'pending' | 'reviewed' | 'resolved';
   timestamp: string;
   evidenceImage?: string; // Base64 or URL
+}
+
+export interface Partner {
+  id: number;
+  nameAr: string;
+  nameEn: string;
+  logo: string;
+}
+
+export interface CurrencyRate {
+  currency: string;
+  buy: number;
+  sell: number;
+  indicator: 'up' | 'down' | 'stable';
 }
 
 export interface Translation {

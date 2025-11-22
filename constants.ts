@@ -1,4 +1,5 @@
-import { Product, NewsItem, Translation, JobOpportunity, MediaItem, OrganizationProfile, CiviCRMStats, SlideData, ServiceItem, RightItem, Publication, DashboardStat, User } from './types';
+
+import { Product, NewsItem, Translation, JobOpportunity, MediaItem, OrganizationProfile, CiviCRMStats, SlideData, ServiceItem, RightItem, Publication, DashboardStat, User, Partner, CurrencyRate } from './types';
 
 export const INITIAL_USERS: User[] = [
   {
@@ -182,6 +183,18 @@ export const MOCK_CRM_STATS: CiviCRMStats = {
   lastSync: "2023-11-10 09:30 AM"
 };
 
+export const PARTNERS_DATA: Partner[] = [
+  { id: 1, nameAr: "وزارة الصناعة والتجارة", nameEn: "Ministry of Industry & Trade", logo: "https://via.placeholder.com/150?text=MOIT" },
+  { id: 2, nameAr: "الغرفة التجارية - تعز", nameEn: "Taiz Chamber of Commerce", logo: "https://via.placeholder.com/150?text=COC" },
+  { id: 3, nameAr: "برنامج الأمم المتحدة الإنمائي", nameEn: "UNDP", logo: "https://via.placeholder.com/150?text=UNDP" },
+  { id: 4, nameAr: "منظمة الصحة العالمية", nameEn: "WHO", logo: "https://via.placeholder.com/150?text=WHO" },
+];
+
+export const CURRENCY_RATES: CurrencyRate[] = [
+  { currency: "USD", buy: 1650, sell: 1660, indicator: 'stable' },
+  { currency: "SAR", buy: 435, sell: 438, indicator: 'up' },
+];
+
 export const TEXTS: Translation = {
   brandName: { ar: "جمعية حماية المستهلك", en: "CPA - Taiz" },
   home: { ar: "الرئيسية", en: "Home" },
@@ -252,6 +265,9 @@ export const TEXTS: Translation = {
   stat_inspections: { ar: "نزول ميداني", en: "Field Inspections" },
   top_violations: { ar: "السلع الأكثر مخالفة", en: "Top Violations" },
   
+  partners_title: { ar: "شركاء النجاح", en: "Our Partners" },
+  currency_title: { ar: "أسعار الصرف - تعز", en: "Exchange Rates - Taiz" },
+
   footer_about: { ar: "عن الجمعية", en: "About CPA" },
   footer_desc: { ar: "منظمة مدنية طوعية تعمل وفق قانون الجمعيات والمؤسسات الأهلية.", en: "Voluntary civil organization operating under the Law of Associations." },
   footer_contact: { ar: "تواصل معنا", en: "Contact Us" },
